@@ -1,0 +1,43 @@
+package com.example.marketing_project.controller;
+
+import com.example.marketing_project.dto.LoginRequestDTO;
+import com.example.marketing_project.dto.LoginResponseDTO;
+import com.example.marketing_project.dto.UserCreateRequestDTO;
+import com.example.marketing_project.dto.UserCreateResponseDTO;
+import com.example.marketing_project.services.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/auth")
+@Tag(name = "Autenticação", description = "Registro e login com access token")
+public class AuthController {
+
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "Registrar usuário")
+    public ResponseEntity<UserCreateResponseDTO> register(@Valid @RequestBody UserCreateRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.createUser(dto));
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Login e gerar access token")
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO dto) {
+        return ResponseEntity.ok(authService.login(dto));
+    }
+}
+
+
+

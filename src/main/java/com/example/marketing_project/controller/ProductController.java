@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,8 +27,12 @@ public class ProductController {
 
     @PostMapping
     @Operation(summary = "Criar produto")
-    public ResponseEntity<ProductResponseDTO> create(@Valid @RequestBody ProductRequestDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(dto));
+    public ResponseEntity<ProductResponseDTO> create(
+            @Valid @RequestBody ProductRequestDTO dto,
+            Authentication authentication
+    ) {
+        UUID userId = UUID.fromString(authentication.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(dto, userId));
     }
 
     @GetMapping

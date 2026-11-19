@@ -26,6 +26,11 @@ public class ProductEntity {
     @Setter
     private boolean active;
 
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime created_at;

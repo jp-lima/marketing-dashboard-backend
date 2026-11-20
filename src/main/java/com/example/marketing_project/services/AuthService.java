@@ -2,6 +2,7 @@ package com.example.marketing_project.services;
 
 import com.example.marketing_project.dto.LoginRequestDTO;
 import com.example.marketing_project.dto.LoginResponseDTO;
+import com.example.marketing_project.dto.MeResponseDTO;
 import com.example.marketing_project.dto.UserCreateRequestDTO;
 import com.example.marketing_project.dto.UserCreateResponseDTO;
 import com.example.marketing_project.entity.UserEntity;
@@ -51,6 +52,12 @@ public class AuthService {
 
         String token = jwtService.generateToken(user);
         return new LoginResponseDTO(token, user.getId().toString(), user.getName(), user.getEmail());
+    }
+
+    public MeResponseDTO getCurrentUser(UUID userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        return userMapper.toMeResponseDTO(user);
     }
 
 }

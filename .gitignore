@@ -5,7 +5,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .env
-AGENTS.md 
+AGENTS.md
+docs/webhook-lead-implementation-plan.md
 
 ### STS ###
 .apt_generated

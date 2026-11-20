@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -37,6 +38,9 @@ public class PurchaseEntity {
 
     @Column(name = "purchased_at", nullable = false)
     private LocalDateTime purchasedAt;
+
+    @OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PurchaseItemEntity> items;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

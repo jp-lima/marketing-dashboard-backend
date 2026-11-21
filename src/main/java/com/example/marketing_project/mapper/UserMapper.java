@@ -32,6 +32,7 @@ public class UserMapper {
         dto.setName(entity.getName());
         dto.setEmail(entity.getEmail());
         dto.setCreated_at(entity.getCreated_at());
+        dto.setUpdated_at(entity.getUpdated_at());
         return dto;
     }
 }

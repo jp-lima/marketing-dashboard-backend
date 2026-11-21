@@ -14,6 +14,7 @@ public class MeResponseDTO {
     private String name;
     private String email;
     private LocalDateTime created_at;
+    private LocalDateTime updated_at;
 
     public MeResponseDTO() {
     }

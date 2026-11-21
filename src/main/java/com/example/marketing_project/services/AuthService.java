@@ -3,6 +3,7 @@ package com.example.marketing_project.services;
 import com.example.marketing_project.dto.LoginRequestDTO;
 import com.example.marketing_project.dto.LoginResponseDTO;
 import com.example.marketing_project.dto.MeResponseDTO;
+import com.example.marketing_project.dto.MeUpdateRequestDTO;
 import com.example.marketing_project.dto.UserCreateRequestDTO;
 import com.example.marketing_project.dto.UserCreateResponseDTO;
 import com.example.marketing_project.entity.UserEntity;
@@ -58,6 +59,15 @@ public class AuthService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
         return userMapper.toMeResponseDTO(user);
+    }
+
+    public MeResponseDTO updateCurrentUser(UUID userId, MeUpdateRequestDTO dto) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        user.setName(dto.getName());
+
+        return userMapper.toMeResponseDTO(userRepository.save(user));
     }
 
 }

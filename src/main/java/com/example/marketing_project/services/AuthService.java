@@ -4,6 +4,7 @@ import com.example.marketing_project.dto.LoginRequestDTO;
 import com.example.marketing_project.dto.LoginResponseDTO;
 import com.example.marketing_project.dto.MeResponseDTO;
 import com.example.marketing_project.dto.MeUpdateRequestDTO;
+import com.example.marketing_project.dto.PasswordUpdateRequestDTO;
 import com.example.marketing_project.dto.UserCreateRequestDTO;
 import com.example.marketing_project.dto.UserCreateResponseDTO;
 import com.example.marketing_project.entity.UserEntity;
@@ -68,6 +69,22 @@ public class AuthService {
         user.setName(dto.getName());
 
         return userMapper.toMeResponseDTO(userRepository.save(user));
+    }
+
+    public void updatePassword(UUID userId, PasswordUpdateRequestDTO dto) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        if (!passwordEncoder.matches(dto.getCurrent_password(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Senha atual incorreta");
+        }
+
+        if (!dto.getNew_password().equals(dto.getConfirm_new_password())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nova senha e confirmação não conferem");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.getNew_password()));
+        userRepository.save(user);
     }
 
 }

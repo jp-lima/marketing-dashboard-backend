@@ -2,6 +2,7 @@ package com.example.marketing_project.controller;
 
 import com.example.marketing_project.dto.MeResponseDTO;
 import com.example.marketing_project.dto.MeUpdateRequestDTO;
+import com.example.marketing_project.dto.PasswordUpdateRequestDTO;
 import com.example.marketing_project.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -41,5 +42,15 @@ public class UserController {
             @Valid @RequestBody MeUpdateRequestDTO dto) {
         UUID userId = UUID.fromString(authentication.getName());
         return ResponseEntity.ok(authService.updateCurrentUser(userId, dto));
+    }
+
+    @PutMapping("/me/password")
+    @Operation(summary = "Atualizar senha do usuário logado")
+    public ResponseEntity<Void> updatePassword(
+            Authentication authentication,
+            @Valid @RequestBody PasswordUpdateRequestDTO dto) {
+        UUID userId = UUID.fromString(authentication.getName());
+        authService.updatePassword(userId, dto);
+        return ResponseEntity.noContent().build();
     }
 }

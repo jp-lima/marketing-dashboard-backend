@@ -1,5 +1,6 @@
 package com.example.marketing_project.controller;
 
+import com.example.marketing_project.dto.CampaignMetricsResponseDTO;
 import com.example.marketing_project.dto.CampaignRequestDTO;
 import com.example.marketing_project.dto.CampaignResponseDTO;
 import com.example.marketing_project.dto.CampaignUpdateRequestDTO;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -64,5 +66,14 @@ public class CampaignController {
             @PathVariable UUID id,
             @Valid @RequestBody CampaignUpdateRequestDTO dto) {
         return ResponseEntity.ok(campaignService.updateCampaign(id, dto));
+    }
+
+    @GetMapping("/{id}/metrics")
+    @Operation(summary = "Métricas de uma campanha")
+    public ResponseEntity<CampaignMetricsResponseDTO> getCampaignMetrics(
+            @PathVariable UUID id,
+            Authentication authentication) {
+        UUID userId = UUID.fromString(authentication.getName());
+        return ResponseEntity.ok(campaignService.getCampaignMetrics(id, userId));
     }
 }

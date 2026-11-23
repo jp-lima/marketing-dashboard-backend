@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public interface PurchaseRepository extends JpaRepository<PurchaseEntity, UUID> {
@@ -16,4 +18,18 @@ public interface PurchaseRepository extends JpaRepository<PurchaseEntity, UUID> 
 
     @Query("SELECT COALESCE(SUM(p.totalAmount), 0) FROM PurchaseEntity p WHERE p.campaign.id = :campaignId AND p.status = :status")
     BigDecimal sumTotalAmountByCampaignIdAndStatus(@Param("campaignId") UUID campaignId, @Param("status") PurchaseStatus status);
+
+    @Query("""
+            SELECT p FROM PurchaseEntity p
+            WHERE p.campaign.user.id = :userId
+              AND p.status = :status
+              AND (:platform IS NULL OR p.campaign.platform = :platform)
+              AND p.purchasedAt BETWEEN :start AND :end
+            """)
+    List<PurchaseEntity> findPaidPurchasesByUserAndFilters(
+            @Param("userId") UUID userId,
+            @Param("status") PurchaseStatus status,
+            @Param("platform") Object platform,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end);
 }
